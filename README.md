@@ -39,7 +39,7 @@ To run SketchFlow locally or contribute to the project, follow these steps:
 1. **Clone the repository**:
 
 ```bash
-git clone https://github.com/iam-baivab/SketchFlow.git
+git clone https://github.com/ThisIs-Developer/SketchFlow.git
 ```
 
 2. **Open the project directory**:
@@ -73,13 +73,13 @@ This project is licensed under the Apache-2.0 License. See the [LICENSE](LICENSE
 
 ## Contact 📧
 
-For any questions or feedback regarding SketchFlow, please open an issue on the GitHub repository or contact the project maintainer [here](https://github.com/iam-baivab).
+For any questions or feedback regarding SketchFlow, please open an issue on the GitHub repository or contact the project maintainer [here](https://github.com/ThisIs-Developer).
 
 ---
 
 Enjoy drawing and creating with SketchFlow! 🎉
 
 [license-shield]: https://img.shields.io/badge/License-Apache%202.0-red.svg
-[license-url]: https://github.com/iam-baivab/SketchFlow/blob/main/LICENSE
+[license-url]: https://github.com/ThisIs-Developer/SketchFlow/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat&logo=linkedin&colorB=blue
 [linkedin-url]: https://www.linkedin.com/in/baivabsarkar/

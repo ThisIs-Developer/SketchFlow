@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SketchFlow</title>
+    <link rel="shortcut icon" href="assets/favicon_web.png" type="image/x-icon">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+CO:wght@100..400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="preloader">
+        <h1>
+            <img src="assets/preload.png" alt="logo">
+            <span>SketchFlow</span>
+        </h1>
+    </div>
+
+    <div class="container-fluid" style="display: none;">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <div class="nav-link-wrapper">
+                                <a class="nav-link active" href="#" onclick="setTool('rectangle')">
+                                    <span class="material-symbols-outlined">rectangle</span>
+                                </a>
+                                <a class="nav-link" href="#" onclick="setTool('circle')">
+                                    <span class="material-symbols-outlined">radio_button_unchecked</span> 
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="nav-link-wrapper">
+                                <a class="nav-link" href="#" onclick="setTool('brush')">
+                                    <span class="material-symbols-outlined">brush</span> 
+                                </a>
+                                <a class="nav-link" href="#" onclick="setTool('line')">
+                                    <span class="material-symbols-outlined">pen_size_2</span> 
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="nav-link-wrapper">
+                                <a class="nav-link" href="#" onclick="setTool('erase')">
+                                    <span class="material-symbols-outlined">ink_eraser</span>
+                                </a>
+                                <a class="nav-link" href="#" onclick="clearCanvas()">
+                                    <span class="material-symbols-outlined">delete_forever</span>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link saveas" href="#" onclick="saveCanvas()">
+                                <span class="material-symbols-outlined">save</span
+                                >Save
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <input type="color" id="colorPicker" class="form-control" onchange="setColor(this.value)">
+                        </li>
+                        <li class="nav-item">
+                            <input type="range" id="brushSizeRange" value="3" min="1" max="100" step="1" onchange="setBrushSize(this.value)">
+                            <input type="number" id="brushSizeNumber" class="form-control" value="3" onchange="setBrushSize(this.value)">
+                        </li>
+                        <li class="nav-item">
+                            <div class="nav-link-wrapper">
+                                <a class="nav-link" href="#" onclick="undo()">
+                                    <span class="material-symbols-outlined">
+                                        undo
+                                    </span>
+                                </a>
+                                <a class="nav-link" href="#" onclick="redo()">
+                                    <span class="material-symbols-outlined">
+                                        redo
+                                    </span>
+                                </a>
+                            </div>
+                        </li> 
+                        <li class="nav-item">
+                            <a class="nav-link github" href="#" onclick="openGitHub()">
+                                <img src="assets/github.png" alt="">
+                                GitHub
+                            </a>
+                        </li>                   
+                    </ul>
+                </div>
+            </nav>
+            <div class="hamburger-menu d-md-none">
+                <button id="hamburgerBtn">
+                    <span class="material-symbols-outlined">
+                        menu
+                    </span>
+                </button>
+            </div>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <canvas id="canvas" width="800" height="600"></canvas>
+            </main>
+        </div>
+    </div>
+
+    <div class="mobile-sidebar d-md-none" id="mobileSidebar">
+        <button id="closeBtn">
+            <span class="material-symbols-outlined">
+                close
+            </span>
+        </button>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" onclick="setTool('rectangle')">Rectangle</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="setTool('circle')">Circle</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="setTool('line')">Line</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="setTool('brush')">Brush</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="setTool('erase')">Erase</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="clearCanvas()">Clear Canvas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="saveCanvas()">Save as Image</a>
+            </li>
+            <li class="nav-item">
+                <input type="color" id="colorPickerMobile" class="form-control" onchange="setColor(this.value)">
+            </li>
+            <li class="nav-item">
+                <input type="range" id="brushSizeMobile" value="5" min="1" max="200" step="1" onchange="setBrushSize(this.value)">
+            </li>
+            <div style="display: flex;">
+                <a class="nav-link" href="#" onclick="undo()">
+                    <span class="material-symbols-outlined">
+                        undo
+                    </span>
+                </a>
+                <a class="nav-link" href="#" onclick="redo()">
+                    <span class="material-symbols-outlined">
+                        redo
+                    </span>
+                </a>
+            </div>       
+        </ul>
+        <div class="github-link">
+            <a class="nav-link" href="#" onclick="openGitHub()">
+                <img src="assets/github.png" alt="">
+                GitHub
+            </a>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

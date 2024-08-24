@@ -241,7 +241,7 @@ function saveCanvas() {
 }
 
 function openGitHub() {
-    window.open('https://github.com/iam-baivab/SketchFlow', '_blank');
+    window.open('https://github.com/ThisIs-Developer/SketchFlow', '_blank');
 }
 
 function saveState() {

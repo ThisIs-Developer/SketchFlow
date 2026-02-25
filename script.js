@@ -6,7 +6,7 @@ const state = {
     tool: 'select',
     strokeColor: '#000000',
     fillColor: '#a5d8ff',
-    fillStyle: 'solid',
+    fillStyle: 'transparent',
     strokeWidth: 2,
     strokeStyle: 'solid',
     sloppiness: 0,
@@ -20,6 +20,7 @@ const state = {
     startX: 0,
     startY: 0,
     selectedElement: null,
+    resizingHandle: null,
     elements: [],
     history: [],
     historyIndex: -1,
@@ -75,6 +76,9 @@ function initializeCanvas() {
     // Keyboard shortcuts
     document.addEventListener('keydown', handleKeyDown);
     
+    // Mouse wheel zoom
+    canvas.addEventListener('wheel', handleWheel, { passive: false });
+
     // Prevent context menu
     canvas.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -143,23 +147,40 @@ function handleMouseDown(e) {
     state.isDrawing = true;
 
     if (state.tool === 'select') {
+        // Check for resize handle on currently-selected element first
+        if (state.selectedElement) {
+            const handle = getHandleAtPoint(x, y, state.selectedElement);
+            if (handle) {
+                state.resizingHandle = handle;
+                return;
+            }
+        }
         handleSelection(x, y);
     } else if (state.tool === 'pan') {
         state.isPanning = true;
         canvas.style.cursor = 'grabbing';
     } else if (state.tool === 'text') {
-        createTextElement(x, y);
+        state.isDrawing = false; // Text handled via overlay, not drawing loop
+        if (!document.querySelector('.canvas-text-input')) {
+            createTextElement(x, y);
+        }
     } else if (state.tool === 'brush') {
         startFreehand(x, y);
     }
 }
 
 function handleMouseMove(e) {
-    if (!state.isDrawing) return;
-
     const rect = canvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) / state.zoom - state.panX;
     const y = (e.clientY - rect.top) / state.zoom - state.panY;
+
+    // Update cursor when hovering over resize handles (not during drag)
+    if (!state.isDrawing && state.tool === 'select' && state.selectedElement) {
+        const handle = getHandleAtPoint(x, y, state.selectedElement);
+        canvas.style.cursor = handle ? getResizeCursor(handle) : 'default';
+    }
+
+    if (!state.isDrawing) return;
 
     if (state.tool === 'pan' && state.isPanning) {
         state.panX += (x - state.startX);
@@ -167,6 +188,8 @@ function handleMouseMove(e) {
         render();
     } else if (state.tool === 'brush') {
         continueFreehand(x, y);
+    } else if (state.tool === 'select' && state.resizingHandle) {
+        resizeElement(x, y);
     } else if (state.tool === 'select' && state.selectedElement) {
         moveElement(x, y);
     } else {
@@ -184,6 +207,9 @@ function handleMouseUp(e) {
     if (state.tool === 'pan') {
         state.isPanning = false;
         canvas.style.cursor = 'grab';
+    } else if (state.resizingHandle) {
+        state.resizingHandle = null;
+        saveHistory();
     } else if (state.tool !== 'select' && state.tool !== 'brush' && state.tool !== 'text') {
         createElement(x, y);
     } else if (state.tool === 'brush') {
@@ -250,22 +276,48 @@ function createElement(endX, endY) {
 }
 
 function createTextElement(x, y) {
-    const text = prompt('Enter text:');
-    if (text) {
-        const element = {
-            id: Date.now(),
-            type: 'text',
-            x: x,
-            y: y,
-            text: text,
-            strokeColor: state.strokeColor,
-            fontSize: state.strokeWidth * 8,
-            opacity: state.opacity / 100
-        };
-        state.elements.push(element);
-        saveHistory();
-        render();
+    const textarea = document.createElement('textarea');
+    textarea.className = 'canvas-text-input';
+    textarea.style.left = ((x + state.panX) * state.zoom) + 'px';
+    textarea.style.top = ((y + state.panY) * state.zoom) + 'px';
+    const fontSize = Math.max(12, state.strokeWidth * 8);
+    textarea.style.fontSize = (fontSize * state.zoom) + 'px';
+    textarea.style.color = state.strokeColor;
+    textarea.rows = 1;
+    document.querySelector('.canvas-area').appendChild(textarea);
+    textarea.focus();
+
+    function commitText() {
+        const text = textarea.value.trim();
+        if (textarea.parentNode) textarea.remove();
+        if (text) {
+            const element = {
+                id: Date.now(),
+                type: 'text',
+                x: x,
+                y: y,
+                text: text,
+                strokeColor: state.strokeColor,
+                fontSize: fontSize,
+                opacity: state.opacity / 100
+            };
+            state.elements.push(element);
+            saveHistory();
+            render();
+        }
     }
+
+    textarea.addEventListener('keydown', function(e) {
+        e.stopPropagation(); // Prevent canvas keyboard shortcuts while typing
+        if (e.key === 'Escape') {
+            if (textarea.parentNode) textarea.remove();
+        } else if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            commitText();
+        }
+    });
+
+    textarea.addEventListener('blur', commitText);
 }
 
 // Freehand Drawing
@@ -571,7 +623,10 @@ function drawText(el) {
     ctx.fillStyle = el.strokeColor;
     ctx.font = `${el.fontSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
     ctx.textBaseline = 'top';
-    ctx.fillText(el.text, el.x, el.y);
+    const lines = el.text.split('\n');
+    lines.forEach((line, i) => {
+        ctx.fillText(line, el.x, el.y + i * el.fontSize * 1.2);
+    });
 }
 
 function drawSelectionBox(element) {
@@ -583,11 +638,25 @@ function drawSelectionBox(element) {
     if (element.type === 'brush') {
         // Draw bounding box for brush strokes
         const bounds = getPathBounds(element.path);
-        ctx.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+        ctx.strokeRect(bounds.x - 5, bounds.y - 5, bounds.width + 10, bounds.height + 10);
     } else if (element.type === 'text') {
         ctx.strokeRect(element.x - 5, element.y - 5, 100, 30);
     } else {
         ctx.strokeRect(element.x - 5, element.y - 5, element.width + 10, element.height + 10);
+    }
+
+    // Draw resize handles for resizable shapes
+    const handles = getResizeHandles(element);
+    if (handles.length > 0) {
+        ctx.setLineDash([]);
+        ctx.strokeStyle = '#1971c2';
+        ctx.lineWidth = 1.5 / state.zoom;
+        const hs = 8 / state.zoom;
+        handles.forEach(h => {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(h.x - hs / 2, h.y - hs / 2, hs, hs);
+            ctx.strokeRect(h.x - hs / 2, h.y - hs / 2, hs, hs);
+        });
     }
     
     ctx.restore();
@@ -602,6 +671,93 @@ function getPathBounds(path) {
         maxY = Math.max(maxY, p.y);
     });
     return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+
+// Returns 8 resize handle positions for resizable shapes
+function getResizeHandles(element) {
+    if (!['rectangle', 'diamond', 'ellipse', 'circle'].includes(element.type)) return [];
+    const { x, y, width: w, height: h } = element;
+    return [
+        { id: 'nw', x: x,         y: y },
+        { id: 'n',  x: x + w / 2, y: y },
+        { id: 'ne', x: x + w,     y: y },
+        { id: 'e',  x: x + w,     y: y + h / 2 },
+        { id: 'se', x: x + w,     y: y + h },
+        { id: 's',  x: x + w / 2, y: y + h },
+        { id: 'sw', x: x,         y: y + h },
+        { id: 'w',  x: x,         y: y + h / 2 }
+    ];
+}
+
+// Returns the handle id if (x, y) is within hit distance of any handle
+function getHandleAtPoint(x, y, element) {
+    const handles = getResizeHandles(element);
+    const hitRadius = 8 / state.zoom;
+    for (const handle of handles) {
+        if (Math.abs(handle.x - x) <= hitRadius && Math.abs(handle.y - y) <= hitRadius) {
+            return handle.id;
+        }
+    }
+    return null;
+}
+
+function getResizeCursor(handleId) {
+    const map = {
+        nw: 'nw-resize', n: 'n-resize', ne: 'ne-resize',
+        e: 'e-resize', se: 'se-resize', s: 's-resize',
+        sw: 'sw-resize', w: 'w-resize'
+    };
+    return map[handleId] || 'default';
+}
+
+function resizeElement(x, y) {
+    const el = state.selectedElement;
+    if (!el || !state.resizingHandle) return;
+
+    const dx = x - state.startX;
+    const dy = y - state.startY;
+    const handle = state.resizingHandle;
+
+    if (handle.includes('e')) {
+        el.width = Math.max(10, el.width + dx);
+    }
+    if (handle.includes('s')) {
+        el.height = Math.max(10, el.height + dy);
+    }
+    if (handle.includes('w')) {
+        const newW = Math.max(10, el.width - dx);
+        el.x += el.width - newW;
+        el.width = newW;
+    }
+    if (handle.includes('n')) {
+        const newH = Math.max(10, el.height - dy);
+        el.y += el.height - newH;
+        el.height = newH;
+    }
+
+    state.startX = x;
+    state.startY = y;
+    render();
+}
+
+// Mouse wheel zoom – zooms centred on the cursor position
+function handleWheel(e) {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const mouseScreenX = e.clientX - rect.left;
+    const mouseScreenY = e.clientY - rect.top;
+
+    const zoomFactor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
+    const oldZoom = state.zoom;
+    const newZoom = Math.min(Math.max(oldZoom * zoomFactor, 0.1), 5);
+
+    // Keep the world-space point under the cursor stable
+    state.panX += mouseScreenX * (1 / newZoom - 1 / oldZoom);
+    state.panY += mouseScreenY * (1 / newZoom - 1 / oldZoom);
+    state.zoom = newZoom;
+
+    updateZoomDisplay();
+    render();
 }
 
 // Rough/Sketchy drawing for hand-drawn effect

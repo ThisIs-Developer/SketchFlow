@@ -24,7 +24,8 @@ const state = {
     history: [],
     historyIndex: -1,
     clipboard: null,
-    darkMode: false
+    darkMode: false,
+    showGrid: true
 };
 
 // Canvas Setup
@@ -81,8 +82,9 @@ function initializeCanvas() {
 
 function resizeCanvas() {
     const container = document.querySelector('.canvas-wrapper');
-    canvas.width = Math.max(1200, container.clientWidth - 40);
-    canvas.height = Math.max(800, container.clientHeight - 40);
+    // Make canvas much larger for infinite scrolling
+    canvas.width = Math.max(10000, container.clientWidth * 5);
+    canvas.height = Math.max(10000, container.clientHeight * 5);
     render();
 }
 
@@ -947,6 +949,26 @@ function toggleShortcuts() {
 function toggleDarkMode() {
     state.darkMode = !state.darkMode;
     document.body.classList.toggle('dark-mode');
+}
+
+function toggleGrid() {
+    state.showGrid = !state.showGrid;
+    const canvasWrapper = document.querySelector('.canvas-wrapper');
+    if (state.showGrid) {
+        canvasWrapper.classList.remove('no-grid');
+    } else {
+        canvasWrapper.classList.add('no-grid');
+    }
+    
+    // Update button state
+    const gridBtn = document.querySelector('[data-control="grid"]');
+    if (gridBtn) {
+        if (state.showGrid) {
+            gridBtn.classList.add('active');
+        } else {
+            gridBtn.classList.remove('active');
+        }
+    }
 }
 
 function openGitHub() {

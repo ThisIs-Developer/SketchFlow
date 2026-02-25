@@ -2,35 +2,70 @@
 [![Apache 2.0 License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-SketchFlow is a simple web application that allows users to create and draw shapes on a canvas using various drawing tools. This README provides an overview of the SketchFlow project, its features, and how to set it up and use it.
+SketchFlow is a professional, feature-rich sketch drawing application inspired by Excalidraw. Create beautiful diagrams, sketches, and drawings with an intuitive interface and powerful tools designed for both professionals and casual users.
 
 <img src="assets/cover.png">
 
 ## Features ✨
 
-- **Drawing Tools**: SketchFlow provides four drawing tools:
-  - Brush 🖌️: Allows freehand drawing with adjustable brush size.
-  - Rectangle ▭: Draws rectangles on the canvas.
-  - Circle ⚪: Draws circles on the canvas.
-  - Line 📏: Draws straight lines.
-  - Erase 🧼: Erases parts of the canvas.
+### 🛠️ Professional Drawing Tools
+- **Selection Tool (V)**: Select, move, and manipulate existing elements
+- **Hand Tool (H)**: Pan around the canvas for easy navigation
+- **Rectangle (R)**: Draw perfect rectangles with customizable properties
+- **Circle (C)**: Create circular shapes with precision
+- **Diamond (D)**: Draw diamond shapes for flowcharts and diagrams
+- **Ellipse (E)**: Create elliptical shapes
+- **Arrow (A)**: Draw arrows with automatic arrowheads for diagrams
+- **Line (L)**: Draw straight lines between points
+- **Pen/Brush (P)**: Freehand drawing with smooth curves
+- **Text Tool (T)**: Add text annotations to your drawings
+- **Eraser**: Remove unwanted elements
 
-- **Adjustable Brush Size**: Users can adjust the brush size using a range input slider.
+### 🎨 Advanced Styling Options
+- **Stroke Color**: Choose from preset colors or use custom colors
+- **Fill Color**: Multiple fill options including transparent, solid, and hatch patterns
+- **Stroke Width**: Four preset widths (Thin, Regular, Bold, Extra Bold)
+- **Stroke Style**: Solid, dashed, or dotted lines
+- **Sloppiness Control**: Adjust from architect-precise to hand-drawn cartoonist style
+- **Opacity Control**: Fine-tune transparency for all elements
 
-- **Color Picker 🎨**: Users can select the drawing color using a color picker input.
+### 🔍 Canvas Controls
+- **Zoom In/Out (+/-)**: Scale your canvas for detailed work
+- **Reset Zoom (0)**: Return to 100% view instantly
+- **Fit to Screen**: Optimize canvas view
+- **Grid Background**: Visual guide for alignment
 
-- **Save and Clear**: SketchFlow allows users to save their drawings as images and clear the canvas.
+### 💾 Export & Sharing
+- **Export as PNG**: High-quality image export with white background
+- **Export as SVG**: Vector graphics for scalability (coming soon)
+- **Export as JSON**: Save and reload your work
+- **Copy to Clipboard**: Quick sharing with one click
 
-- **Undo and Redo**: Users can undo and redo their drawing actions using keyboard shortcuts (Ctrl+Z for undo and Ctrl+Y for redo) or buttons provided in the UI.
+### ⌨️ Keyboard Shortcuts
+- **Tool Selection**: Single-key shortcuts (V, H, R, C, D, E, A, L, P, T)
+- **Actions**: Standard shortcuts (Ctrl+Z/Y for Undo/Redo, Ctrl+C/V for Copy/Paste, Ctrl+D for Duplicate)
+- **Delete**: Remove selected elements with Delete or Backspace
+- **Select All**: Ctrl+A to select all elements
+- **View**: +/- for zoom, 0 to reset
 
-- **Responsive Design**: The application is responsive and adapts to different screen sizes, including mobile devices.
+### 🌓 Dark Mode
+- Toggle between light and dark themes for comfortable drawing in any environment
 
-## UI
-<img src="assets/save2.png">
-<img src="assets/math.png">
+### 📱 Responsive Design
+- Fully responsive interface that works seamlessly on desktop, tablet, and mobile devices
+- Touch-optimized controls for mobile drawing
 
-## Save As Image 📸
-<img src="assets/downlode1.jpg">
+
+## Screenshots 📸
+
+### Main Interface
+Professional toolbar with all drawing tools and comprehensive property controls.
+
+### Dark Mode
+Comfortable drawing experience in low-light environments.
+
+### Keyboard Shortcuts
+Quick access to all features with intuitive keyboard shortcuts.
 
 ## Getting Started 🚀
 
@@ -52,10 +87,11 @@ cd SketchFlow
 
 ## Technologies Used 💻
 
-- HTML5
-- CSS3 (Bootstrap for styling)
-- JavaScript (Canvas API for drawing functionality)
-- Font Awesome for icons
+- **HTML5**: Semantic markup and Canvas API
+- **CSS3**: Modern styling with CSS Variables for theming
+- **JavaScript (ES6+)**: Vanilla JavaScript with Canvas API for drawing functionality
+- **Responsive Design**: Mobile-first approach with media queries
+- **Material Icons**: Professional icon set
 
 ## Contributing 🤝
 

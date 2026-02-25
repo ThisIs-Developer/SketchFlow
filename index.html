@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SketchFlow</title>
+    <title>SketchFlow - Professional Drawing App</title>
     <link rel="shortcut icon" href="assets/favicon_web.png" type="image/x-icon">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,144 +20,261 @@
         </h1>
     </div>
 
-    <div class="container-fluid" style="display: none;">
-        <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <div class="nav-link-wrapper">
-                                <a class="nav-link active" href="#" onclick="setTool('rectangle')">
-                                    <span class="material-symbols-outlined">rectangle</span>
-                                </a>
-                                <a class="nav-link" href="#" onclick="setTool('circle')">
-                                    <span class="material-symbols-outlined">radio_button_unchecked</span> 
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="nav-link-wrapper">
-                                <a class="nav-link" href="#" onclick="setTool('brush')">
-                                    <span class="material-symbols-outlined">brush</span> 
-                                </a>
-                                <a class="nav-link" href="#" onclick="setTool('line')">
-                                    <span class="material-symbols-outlined">pen_size_2</span> 
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="nav-link-wrapper">
-                                <a class="nav-link" href="#" onclick="setTool('erase')">
-                                    <span class="material-symbols-outlined">ink_eraser</span>
-                                </a>
-                                <a class="nav-link" href="#" onclick="clearCanvas()">
-                                    <span class="material-symbols-outlined">delete_forever</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link saveas" href="#" onclick="saveCanvas()">
-                                <span class="material-symbols-outlined">save</span
-                                >Save
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <input type="color" id="colorPicker" class="form-control" onchange="setColor(this.value)">
-                        </li>
-                        <li class="nav-item">
-                            <input type="range" id="brushSizeRange" value="3" min="1" max="100" step="1" onchange="setBrushSize(this.value)">
-                            <input type="number" id="brushSizeNumber" class="form-control" value="3" onchange="setBrushSize(this.value)">
-                        </li>
-                        <li class="nav-item">
-                            <div class="nav-link-wrapper">
-                                <a class="nav-link" href="#" onclick="undo()">
-                                    <span class="material-symbols-outlined">
-                                        undo
-                                    </span>
-                                </a>
-                                <a class="nav-link" href="#" onclick="redo()">
-                                    <span class="material-symbols-outlined">
-                                        redo
-                                    </span>
-                                </a>
-                            </div>
-                        </li> 
-                        <li class="nav-item">
-                            <a class="nav-link github" href="#" onclick="openGitHub()">
-                                <img src="assets/github.png" alt="">
-                                GitHub
-                            </a>
-                        </li>                   
-                    </ul>
-                </div>
-            </nav>
-            <div class="hamburger-menu d-md-none">
-                <button id="hamburgerBtn">
-                    <span class="material-symbols-outlined">
-                        menu
-                    </span>
+    <div class="app-container" style="display: none;">
+        <!-- Top Toolbar -->
+        <div class="top-toolbar">
+            <div class="toolbar-left">
+                <button class="tool-btn" onclick="setTool('select')" title="Select (V)" data-tool="select">
+                    <span class="material-symbols-outlined">near_me</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('pan')" title="Hand Tool (H)" data-tool="pan">
+                    <span class="material-symbols-outlined">pan_tool</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="tool-btn" onclick="setTool('rectangle')" title="Rectangle (R)" data-tool="rectangle">
+                    <span class="material-symbols-outlined">rectangle</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('circle')" title="Circle (C)" data-tool="circle">
+                    <span class="material-symbols-outlined">radio_button_unchecked</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('diamond')" title="Diamond (D)" data-tool="diamond">
+                    <span class="material-symbols-outlined">change_history</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('ellipse')" title="Ellipse (E)" data-tool="ellipse">
+                    <span class="material-symbols-outlined">circle</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('arrow')" title="Arrow (A)" data-tool="arrow">
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('line')" title="Line (L)" data-tool="line">
+                    <span class="material-symbols-outlined">pen_size_2</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('brush')" title="Draw (P)" data-tool="brush">
+                    <span class="material-symbols-outlined">brush</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('text')" title="Text (T)" data-tool="text">
+                    <span class="material-symbols-outlined">text_fields</span>
+                </button>
+                <button class="tool-btn" onclick="setTool('erase')" title="Eraser" data-tool="erase">
+                    <span class="material-symbols-outlined">ink_eraser</span>
                 </button>
             </div>
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <canvas id="canvas" width="800" height="600"></canvas>
-            </main>
+            <div class="toolbar-center">
+                <h2 class="app-title">SketchFlow</h2>
+            </div>
+            <div class="toolbar-right">
+                <button class="icon-btn" onclick="toggleShortcuts()" title="Keyboard Shortcuts">
+                    <span class="material-symbols-outlined">keyboard</span>
+                </button>
+                <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                    <span class="material-symbols-outlined">dark_mode</span>
+                </button>
+                <button class="icon-btn" onclick="openGitHub()" title="GitHub">
+                    <span class="material-symbols-outlined">code</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Left Sidebar with Properties -->
+        <div class="left-sidebar">
+            <div class="property-section">
+                <label>Stroke</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="strokeColor" value="#000000" onchange="setStrokeColor(this.value)">
+                    <span class="color-label">Stroke</span>
+                </div>
+                <div class="color-presets">
+                    <button class="color-preset" style="background: #000000;" onclick="setStrokeColor('#000000')"></button>
+                    <button class="color-preset" style="background: #e03131;" onclick="setStrokeColor('#e03131')"></button>
+                    <button class="color-preset" style="background: #2f9e44;" onclick="setStrokeColor('#2f9e44')"></button>
+                    <button class="color-preset" style="background: #1971c2;" onclick="setStrokeColor('#1971c2')"></button>
+                    <button class="color-preset" style="background: #f08c00;" onclick="setStrokeColor('#f08c00')"></button>
+                </div>
+            </div>
+            
+            <div class="property-section">
+                <label>Fill</label>
+                <div class="fill-options">
+                    <button class="fill-btn" onclick="setFillStyle('transparent')" data-fill="transparent" title="No Fill">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                    <button class="fill-btn active" onclick="setFillStyle('solid')" data-fill="solid" title="Solid Fill">
+                        <span class="material-symbols-outlined">square</span>
+                    </button>
+                    <button class="fill-btn" onclick="setFillStyle('hatch')" data-fill="hatch" title="Hatch Fill">
+                        <span class="material-symbols-outlined">grid_on</span>
+                    </button>
+                </div>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="fillColor" value="#a5d8ff" onchange="setFillColor(this.value)">
+                    <span class="color-label">Fill</span>
+                </div>
+                <div class="color-presets">
+                    <button class="color-preset" style="background: #ffffff;" onclick="setFillColor('#ffffff')"></button>
+                    <button class="color-preset" style="background: #ffc9c9;" onclick="setFillColor('#ffc9c9')"></button>
+                    <button class="color-preset" style="background: #b2f2bb;" onclick="setFillColor('#b2f2bb')"></button>
+                    <button class="color-preset" style="background: #a5d8ff;" onclick="setFillColor('#a5d8ff')"></button>
+                    <button class="color-preset" style="background: #ffec99;" onclick="setFillColor('#ffec99')"></button>
+                </div>
+            </div>
+
+            <div class="property-section">
+                <label>Stroke Width</label>
+                <div class="stroke-width-options">
+                    <button class="stroke-btn" onclick="setStrokeWidth(1)" data-width="1">Thin</button>
+                    <button class="stroke-btn active" onclick="setStrokeWidth(2)" data-width="2">Regular</button>
+                    <button class="stroke-btn" onclick="setStrokeWidth(4)" data-width="4">Bold</button>
+                    <button class="stroke-btn" onclick="setStrokeWidth(8)" data-width="8">Extra Bold</button>
+                </div>
+            </div>
+
+            <div class="property-section">
+                <label>Stroke Style</label>
+                <div class="stroke-style-options">
+                    <button class="style-btn active" onclick="setStrokeStyle('solid')" data-style="solid">
+                        <svg width="60" height="10"><line x1="5" y1="5" x2="55" y2="5" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="style-btn" onclick="setStrokeStyle('dashed')" data-style="dashed">
+                        <svg width="60" height="10"><line x1="5" y1="5" x2="55" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray="5,5"/></svg>
+                    </button>
+                    <button class="style-btn" onclick="setStrokeStyle('dotted')" data-style="dotted">
+                        <svg width="60" height="10"><line x1="5" y1="5" x2="55" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray="2,3"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="property-section">
+                <label>Sloppiness</label>
+                <input type="range" id="sloppiness" value="0" min="0" max="3" step="1" onchange="setSloppiness(this.value)">
+                <div class="sloppiness-labels">
+                    <span>Architect</span>
+                    <span>Artist</span>
+                    <span>Cartoonist</span>
+                </div>
+            </div>
+
+            <div class="property-section">
+                <label>Opacity</label>
+                <input type="range" id="opacity" value="100" min="0" max="100" step="5" onchange="setOpacity(this.value)">
+                <span id="opacityValue">100%</span>
+            </div>
+        </div>
+
+        <!-- Main Canvas Area -->
+        <div class="canvas-container">
+            <div class="canvas-controls">
+                <button class="control-btn" onclick="zoomOut()" title="Zoom Out (-)">
+                    <span class="material-symbols-outlined">zoom_out</span>
+                </button>
+                <span class="zoom-level" id="zoomLevel">100%</span>
+                <button class="control-btn" onclick="zoomIn()" title="Zoom In (+)">
+                    <span class="material-symbols-outlined">zoom_in</span>
+                </button>
+                <button class="control-btn" onclick="resetZoom()" title="Reset Zoom (0)">
+                    <span class="material-symbols-outlined">fit_screen</span>
+                </button>
+                <div class="control-separator"></div>
+                <button class="control-btn" onclick="undo()" title="Undo (Ctrl+Z)">
+                    <span class="material-symbols-outlined">undo</span>
+                </button>
+                <button class="control-btn" onclick="redo()" title="Redo (Ctrl+Y)">
+                    <span class="material-symbols-outlined">redo</span>
+                </button>
+                <div class="control-separator"></div>
+                <button class="control-btn" onclick="clearCanvas()" title="Clear Canvas">
+                    <span class="material-symbols-outlined">delete_forever</span>
+                </button>
+                <button class="control-btn" onclick="showExportMenu()" title="Export">
+                    <span class="material-symbols-outlined">download</span>
+                </button>
+            </div>
+            <div class="canvas-wrapper">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- Export Menu Modal -->
+        <div class="modal" id="exportModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Export</h3>
+                    <button class="close-btn" onclick="closeExportMenu()">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button class="export-option" onclick="exportAsPNG()">
+                        <span class="material-symbols-outlined">image</span>
+                        Export as PNG
+                    </button>
+                    <button class="export-option" onclick="exportAsSVG()">
+                        <span class="material-symbols-outlined">polyline</span>
+                        Export as SVG
+                    </button>
+                    <button class="export-option" onclick="exportAsJSON()">
+                        <span class="material-symbols-outlined">data_object</span>
+                        Export as JSON
+                    </button>
+                    <button class="export-option" onclick="copyToClipboard()">
+                        <span class="material-symbols-outlined">content_copy</span>
+                        Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Keyboard Shortcuts Modal -->
+        <div class="modal" id="shortcutsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Keyboard Shortcuts</h3>
+                    <button class="close-btn" onclick="toggleShortcuts()">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="modal-body shortcuts-list">
+                    <div class="shortcut-group">
+                        <h4>Tools</h4>
+                        <div class="shortcut"><kbd>V</kbd><span>Selection</span></div>
+                        <div class="shortcut"><kbd>H</kbd><span>Hand</span></div>
+                        <div class="shortcut"><kbd>R</kbd><span>Rectangle</span></div>
+                        <div class="shortcut"><kbd>C</kbd><span>Circle</span></div>
+                        <div class="shortcut"><kbd>D</kbd><span>Diamond</span></div>
+                        <div class="shortcut"><kbd>E</kbd><span>Ellipse</span></div>
+                        <div class="shortcut"><kbd>A</kbd><span>Arrow</span></div>
+                        <div class="shortcut"><kbd>L</kbd><span>Line</span></div>
+                        <div class="shortcut"><kbd>P</kbd><span>Pen/Draw</span></div>
+                        <div class="shortcut"><kbd>T</kbd><span>Text</span></div>
+                    </div>
+                    <div class="shortcut-group">
+                        <h4>Actions</h4>
+                        <div class="shortcut"><kbd>Ctrl</kbd> + <kbd>Z</kbd><span>Undo</span></div>
+                        <div class="shortcut"><kbd>Ctrl</kbd> + <kbd>Y</kbd><span>Redo</span></div>
+                        <div class="shortcut"><kbd>Ctrl</kbd> + <kbd>C</kbd><span>Copy</span></div>
+                        <div class="shortcut"><kbd>Ctrl</kbd> + <kbd>V</kbd><span>Paste</span></div>
+                        <div class="shortcut"><kbd>Ctrl</kbd> + <kbd>D</kbd><span>Duplicate</span></div>
+                        <div class="shortcut"><kbd>Delete</kbd><span>Delete Selected</span></div>
+                        <div class="shortcut"><kbd>Ctrl</kbd> + <kbd>A</kbd><span>Select All</span></div>
+                    </div>
+                    <div class="shortcut-group">
+                        <h4>View</h4>
+                        <div class="shortcut"><kbd>+</kbd><span>Zoom In</span></div>
+                        <div class="shortcut"><kbd>-</kbd><span>Zoom Out</span></div>
+                        <div class="shortcut"><kbd>0</kbd><span>Reset Zoom</span></div>
+                        <div class="shortcut"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd><span>Export</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="mobile-sidebar d-md-none" id="mobileSidebar">
-        <button id="closeBtn">
-            <span class="material-symbols-outlined">
-                close
-            </span>
+    <!-- Mobile Hamburger Menu -->
+    <div class="hamburger-menu d-md-none">
+        <button id="hamburgerBtn">
+            <span class="material-symbols-outlined">menu</span>
         </button>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="#" onclick="setTool('rectangle')">Rectangle</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="setTool('circle')">Circle</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="setTool('line')">Line</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="setTool('brush')">Brush</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="setTool('erase')">Erase</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="clearCanvas()">Clear Canvas</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" onclick="saveCanvas()">Save as Image</a>
-            </li>
-            <li class="nav-item">
-                <input type="color" id="colorPickerMobile" class="form-control" onchange="setColor(this.value)">
-            </li>
-            <li class="nav-item">
-                <input type="range" id="brushSizeMobile" value="5" min="1" max="200" step="1" onchange="setBrushSize(this.value)">
-            </li>
-            <div style="display: flex;">
-                <a class="nav-link" href="#" onclick="undo()">
-                    <span class="material-symbols-outlined">
-                        undo
-                    </span>
-                </a>
-                <a class="nav-link" href="#" onclick="redo()">
-                    <span class="material-symbols-outlined">
-                        redo
-                    </span>
-                </a>
-            </div>       
-        </ul>
-        <div class="github-link">
-            <a class="nav-link" href="#" onclick="openGitHub()">
-                <img src="assets/github.png" alt="">
-                GitHub
-            </a>
-        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

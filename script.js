@@ -40,9 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
 
     setTimeout(function () {
-        document.querySelector(".app-container").style.display = "flex";
+        document.querySelector(".app-container").style.display = "block";
         document.querySelector(".preloader").style.display = "none";
         initializeCanvas();
+        // Mark grid button as active by default
+        document.getElementById('gridBtn')?.classList.add('active');
     }, 1500);
 
     // Set default tool
@@ -53,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function initializeCanvas() {
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
-    canvasWrapper = document.querySelector('.canvas-wrapper');
+    canvasWrapper = document.querySelector('.canvas-area');
 
     // Set canvas size
     resizeCanvas();
@@ -81,7 +83,7 @@ function initializeCanvas() {
 }
 
 function resizeCanvas() {
-    const container = document.querySelector('.canvas-wrapper');
+    const container = document.querySelector('.canvas-area');
     // Make canvas much larger for infinite scrolling
     canvas.width = Math.max(10000, container.clientWidth * 5);
     canvas.height = Math.max(10000, container.clientHeight * 5);
@@ -722,7 +724,22 @@ function resetZoom() {
 }
 
 function updateZoomDisplay() {
-    document.getElementById('zoomLevel').textContent = Math.round(state.zoom * 100) + '%';
+    const el = document.getElementById('zoomLevel');
+    if (el) el.textContent = Math.round(state.zoom * 100) + '%';
+}
+
+// Sidebar toggle (for mobile / menu button)
+function toggleSidebar() {
+    document.getElementById('leftSidebar')?.classList.toggle('show');
+}
+
+// Sloppiness via icon buttons
+function setSloppinessBtn(value) {
+    state.sloppiness = parseInt(value);
+    document.querySelectorAll('.slop-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-slop="${value}"]`)?.classList.add('active');
 }
 
 // History Management
@@ -953,15 +970,15 @@ function toggleDarkMode() {
 
 function toggleGrid() {
     state.showGrid = !state.showGrid;
-    const canvasWrapper = document.querySelector('.canvas-wrapper');
+    const canvasArea = document.querySelector('.canvas-area');
     if (state.showGrid) {
-        canvasWrapper.classList.remove('no-grid');
+        canvasArea.classList.remove('no-grid');
     } else {
-        canvasWrapper.classList.add('no-grid');
+        canvasArea.classList.add('no-grid');
     }
     
     // Update button state
-    const gridBtn = document.querySelector('[data-control="grid"]');
+    const gridBtn = document.getElementById('gridBtn');
     if (gridBtn) {
         if (state.showGrid) {
             gridBtn.classList.add('active');
@@ -973,12 +990,4 @@ function toggleGrid() {
 
 function openGitHub() {
     window.open('https://github.com/ThisIs-Developer/SketchFlow', '_blank');
-}
-
-// Mobile Support
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-if (hamburgerBtn) {
-    hamburgerBtn.addEventListener('click', () => {
-        document.querySelector('.left-sidebar')?.classList.toggle('show');
-    });
 }
